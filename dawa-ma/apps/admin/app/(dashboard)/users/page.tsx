@@ -1,9 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 
 const mockUsers = [
   { id: 'P001', name: 'Ahmed Benali', phone: '+212 6 12 34 56 78', email: 'ahmed@email.com', city: 'Casablanca', orders: 12, status: 'active', joinedAt: '2025-10-15' },
@@ -36,101 +33,100 @@ export default function UsersPage() {
   return (
     <div className="space-y-6">
       {/* Stats */}
-      <div className="grid grid-cols-4 gap-4">
+      <div className="metrics-grid">
         {userStats.map((stat) => (
-          <Card key={stat.label}>
-            <CardContent className="p-4">
-              <p className="text-2xl font-bold">{stat.value}</p>
-              <p className="text-sm text-gray-500">{stat.label}</p>
-              <p className="text-sm text-green-600">{stat.change}</p>
-            </CardContent>
-          </Card>
+          <div key={stat.label} className="stat-card">
+            <p className="stat-value">{stat.value}</p>
+            <p className="stat-label">{stat.label}</p>
+            <span className={`badge mt-2 ${stat.change.startsWith('-') ? 'badge-critical' : 'badge-verify'}`}>
+              {stat.change}
+            </span>
+          </div>
         ))}
       </div>
 
       {/* Filters */}
-      <Card>
-        <CardContent className="p-4">
-          <div className="flex items-center gap-4">
-            <Input
-              placeholder="Rechercher par nom, téléphone ou email..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="max-w-sm"
-            />
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
-            >
-              <option value="all">Tous les statuts</option>
-              <option value="active">Actif</option>
-              <option value="suspended">Suspendu</option>
-              <option value="pending">En attente</option>
-            </select>
-            <Button variant="outline">Exporter CSV</Button>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="chart-container">
+        <div className="flex items-center gap-4">
+          <input
+            type="text"
+            placeholder="Rechercher par nom, téléphone ou email..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="input max-w-sm"
+          />
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="input w-48"
+          >
+            <option value="all">Tous les statuts</option>
+            <option value="active">Actif</option>
+            <option value="suspended">Suspendu</option>
+            <option value="pending">En attente</option>
+          </select>
+          <button className="btn-secondary">Exporter CSV</button>
+        </div>
+      </div>
 
       {/* Users Table */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Liste des patients</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b">
-                  <th className="text-left py-3 px-4 font-medium text-gray-500">ID</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-500">Nom</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-500">Contact</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-500">Ville</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-500">Commandes</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-500">Statut</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-500">Inscrit le</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-500">Actions</th>
+      <div className="chart-container !p-0">
+        <div className="p-4 border-b" style={{ borderColor: 'var(--border-primary)' }}>
+          <h3 className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>
+            Liste des patients
+          </h3>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Contact</th>
+                <th>Ville</th>
+                <th>Commandes</th>
+                <th>Statut</th>
+                <th>Inscrit le</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredUsers.map((user) => (
+                <tr key={user.id}>
+                  <td className="font-mono text-sm">{user.id}</td>
+                  <td className="font-medium" style={{ color: 'var(--text-primary)' }}>{user.name}</td>
+                  <td>
+                    <div style={{ color: 'var(--text-primary)' }}>{user.phone}</div>
+                    <div style={{ color: 'var(--text-muted)' }} className="text-xs">{user.email}</div>
+                  </td>
+                  <td>{user.city}</td>
+                  <td>{user.orders}</td>
+                  <td>
+                    <span
+                      className={`badge ${
+                        user.status === 'active'
+                          ? 'badge-verify'
+                          : user.status === 'suspended'
+                          ? 'badge-critical'
+                          : 'badge-warning'
+                      }`}
+                    >
+                      {user.status === 'active' ? 'Actif' : user.status === 'suspended' ? 'Suspendu' : 'En attente'}
+                    </span>
+                  </td>
+                  <td style={{ color: 'var(--text-muted)' }}>{user.joinedAt}</td>
+                  <td>
+                    <div className="flex items-center gap-2">
+                      <button className="btn-secondary text-sm py-1 px-2">Voir</button>
+                      <button className="btn-danger text-sm py-1 px-2">Suspendre</button>
+                    </div>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {filteredUsers.map((user) => (
-                  <tr key={user.id} className="border-b hover:bg-gray-50">
-                    <td className="py-3 px-4 font-mono text-sm">{user.id}</td>
-                    <td className="py-3 px-4 font-medium">{user.name}</td>
-                    <td className="py-3 px-4">
-                      <div className="text-sm">{user.phone}</div>
-                      <div className="text-xs text-gray-500">{user.email}</div>
-                    </td>
-                    <td className="py-3 px-4">{user.city}</td>
-                    <td className="py-3 px-4">{user.orders}</td>
-                    <td className="py-3 px-4">
-                      <span
-                        className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          user.status === 'active'
-                            ? 'bg-green-100 text-green-700'
-                            : user.status === 'suspended'
-                            ? 'bg-red-100 text-red-700'
-                            : 'bg-yellow-100 text-yellow-700'
-                        }`}
-                      >
-                        {user.status === 'active' ? 'Actif' : user.status === 'suspended' ? 'Suspendu' : 'En attente'}
-                      </span>
-                    </td>
-                    <td className="py-3 px-4 text-sm text-gray-500">{user.joinedAt}</td>
-                    <td className="py-3 px-4">
-                      <div className="flex items-center gap-2">
-                        <Button variant="ghost" size="sm">Voir</Button>
-                        <Button variant="ghost" size="sm" className="text-red-600">Suspendre</Button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </CardContent>
-      </Card>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 }

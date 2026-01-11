@@ -2,58 +2,392 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 239 84% 67%; /* Indigo 500 */
-    --primary-foreground: 0 0% 100%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 239 84% 67%;
-    --radius: 0.5rem;
-  }
+/* ============================================
+   DAWA.ma V10 Admin Portal Design System
+   Command Center Architecture for Operations
+   ============================================ */
 
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 239 84% 67%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 239 84% 67%;
-  }
+:root {
+  /* Background: Deep, not pure black (reduces eye strain) */
+  --bg-primary: #0A0A0F;
+  --bg-secondary: #12121A;
+  --bg-elevated: #1A1A24;
+  --bg-surface: #22222E;
+
+  /* Text: High contrast but not harsh */
+  --text-primary: #F4F4F5;
+  --text-secondary: #A1A1AA;
+  --text-muted: #71717A;
+  --text-tertiary: #52525B;
+
+  /* Semantic: Action-oriented */
+  --color-verify: #4ADE80;
+  --color-warning: #FBBF24;
+  --color-danger: #F87171;
+  --color-info: #60A5FA;
+  --color-neutral: #A1A1AA;
+
+  /* Priority Tiers */
+  --priority-critical: #EF4444;
+  --priority-high: #F97316;
+  --priority-medium: #3B82F6;
+  --priority-low: #6B7280;
+
+  /* Accent: Admin Portal uses Indigo */
+  --accent-primary: #6366F1;
+  --accent-secondary: #8B5CF6;
+
+  /* Borders */
+  --border-primary: rgba(255, 255, 255, 0.08);
+  --border-secondary: rgba(255, 255, 255, 0.04);
+
+  /* Spacing (intentional, not default 4px) */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.875rem;
+  --space-4: 1.25rem;
+  --space-5: 2rem;
+  --space-6: 3.5rem;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
 }
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-[var(--border-primary)];
   }
+
   body {
-    @apply bg-background text-foreground;
+    font-family: 'DM Sans', 'SF Pro Display', system-ui, sans-serif;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
+
+  /* Scrollbar Styling */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--bg-primary);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--bg-surface);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
+  }
+}
+
+@layer components {
+  /* Sidebar Navigation */
+  .sidebar {
+    background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+    border-right: 1px solid var(--border-primary);
+  }
+
+  .nav-item {
+    @apply flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all;
+    color: var(--text-secondary);
+  }
+
+  .nav-item:hover {
+    background: var(--bg-elevated);
+    color: var(--text-primary);
+  }
+
+  .nav-item-active {
+    background: var(--accent-primary);
+    color: white;
+  }
+
+  /* Stats Cards */
+  .stat-card {
+    @apply p-5 rounded-lg border transition-all;
+    background: var(--bg-secondary);
+    border-color: var(--border-primary);
+  }
+
+  .stat-card:hover {
+    border-color: var(--accent-primary);
+    transform: translateY(-2px);
+  }
+
+  .stat-value {
+    @apply text-3xl font-bold;
+    font-family: 'JetBrains Mono', 'SF Mono', monospace;
+  }
+
+  .stat-label {
+    @apply text-sm mt-1;
+    color: var(--text-muted);
+  }
+
+  /* Data Tables */
+  .data-table {
+    @apply w-full;
+    background: var(--bg-secondary);
+    border-radius: 0.5rem;
+    border: 1px solid var(--border-primary);
+    overflow: hidden;
+  }
+
+  .data-table thead {
+    background: var(--bg-elevated);
+    border-bottom: 1px solid var(--border-primary);
+  }
+
+  .data-table th {
+    @apply text-left px-4 py-3 text-sm font-semibold uppercase tracking-wider;
+    color: var(--text-secondary);
+  }
+
+  .data-table td {
+    @apply px-4 py-3 border-b;
+    border-color: var(--border-secondary);
+  }
+
+  .data-table tr:hover {
+    background: var(--bg-elevated);
+  }
+
+  .data-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  /* Badges */
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  .badge-verify {
+    background: rgba(74, 222, 128, 0.15);
+    color: var(--color-verify);
+    border: 1px solid rgba(74, 222, 128, 0.3);
+  }
+
+  .badge-warning {
+    background: rgba(251, 191, 36, 0.15);
+    color: var(--color-warning);
+    border: 1px solid rgba(251, 191, 36, 0.3);
+  }
+
+  .badge-critical {
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--priority-critical);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+  }
+
+  .badge-info {
+    background: rgba(96, 165, 250, 0.15);
+    color: var(--color-info);
+    border: 1px solid rgba(96, 165, 250, 0.3);
+  }
+
+  .badge-neutral {
+    background: var(--bg-elevated);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-primary);
+  }
+
+  /* Action Buttons */
+  .btn-primary {
+    @apply inline-flex items-center justify-center px-4 py-2 rounded-lg font-medium transition-all;
+    background: var(--accent-primary);
+    color: white;
+  }
+
+  .btn-primary:hover {
+    background: #5458e8;
+    transform: translateY(-1px);
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center px-4 py-2 rounded-lg font-medium transition-all;
+    background: var(--bg-elevated);
+    color: var(--text-primary);
+    border: 1px solid var(--border-primary);
+  }
+
+  .btn-secondary:hover {
+    background: var(--bg-surface);
+    border-color: var(--accent-primary);
+  }
+
+  .btn-danger {
+    @apply inline-flex items-center justify-center px-4 py-2 rounded-lg font-medium transition-all;
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--priority-critical);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+  }
+
+  .btn-danger:hover {
+    background: rgba(239, 68, 68, 0.25);
+  }
+
+  .btn-verify {
+    @apply inline-flex items-center justify-center px-4 py-2 rounded-lg font-medium transition-all;
+    background: rgba(74, 222, 128, 0.15);
+    color: var(--color-verify);
+    border: 1px solid rgba(74, 222, 128, 0.3);
+  }
+
+  .btn-verify:hover {
+    background: rgba(74, 222, 128, 0.25);
+  }
+
+  /* Form Inputs */
+  .input {
+    @apply w-full px-3 py-2 rounded-lg text-sm transition-all;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-primary);
+    color: var(--text-primary);
+  }
+
+  .input:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+  }
+
+  .input::placeholder {
+    color: var(--text-muted);
+  }
+
+  /* Activity Feed */
+  .activity-item {
+    @apply flex items-start gap-3 p-3 rounded-lg transition-all;
+  }
+
+  .activity-item:hover {
+    background: var(--bg-elevated);
+  }
+
+  .activity-dot {
+    @apply w-2 h-2 rounded-full mt-2 flex-shrink-0;
+  }
+
+  /* Metrics Grid */
+  .metrics-grid {
+    @apply grid gap-4;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+
+  /* Chart Container */
+  .chart-container {
+    @apply p-5 rounded-lg;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-primary);
+  }
+
+  /* Status Indicator */
+  .status-indicator {
+    @apply w-3 h-3 rounded-full;
+  }
+
+  .status-online {
+    background: var(--color-verify);
+    box-shadow: 0 0 8px var(--color-verify);
+  }
+
+  .status-offline {
+    background: var(--text-muted);
+  }
+
+  .status-warning {
+    background: var(--color-warning);
+    box-shadow: 0 0 8px var(--color-warning);
+  }
+
+  /* Keyboard Shortcuts */
+  .kbd {
+    @apply inline-flex items-center justify-center px-1.5 py-0.5 rounded text-xs font-mono;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-primary);
+    color: var(--text-secondary);
+    min-width: 1.25rem;
+  }
+
+  /* Section Headers */
+  .section-header {
+    @apply text-sm font-semibold uppercase tracking-wider mb-4;
+    color: var(--text-muted);
+  }
+
+  /* Empty State */
+  .empty-state {
+    @apply flex flex-col items-center justify-center py-12 text-center;
+  }
+
+  .empty-state-icon {
+    @apply w-16 h-16 mb-4 opacity-50;
+    color: var(--text-muted);
+  }
+
+  /* Dropdown Menu */
+  .dropdown {
+    @apply absolute right-0 mt-2 w-48 rounded-lg shadow-lg z-50;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-primary);
+  }
+
+  .dropdown-item {
+    @apply flex items-center gap-2 px-4 py-2 text-sm transition-colors;
+    color: var(--text-secondary);
+  }
+
+  .dropdown-item:hover {
+    background: var(--bg-surface);
+    color: var(--text-primary);
+  }
+
+  /* Toast Notifications */
+  .toast {
+    @apply fixed bottom-4 right-4 p-4 rounded-lg shadow-lg z-50;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-primary);
+    max-width: 400px;
+  }
+
+  .toast-success {
+    border-left: 4px solid var(--color-verify);
+  }
+
+  .toast-error {
+    border-left: 4px solid var(--priority-critical);
+  }
+
+  .toast-warning {
+    border-left: 4px solid var(--color-warning);
+  }
+}
+
+/* RTL Support */
+[dir="rtl"] .sidebar {
+  border-right: none;
+  border-left: 1px solid var(--border-primary);
+}
+
+/* Loading States */
+@keyframes pulse-glow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.loading-pulse {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Transitions */
+.transition-smooth {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }

@@ -14,3 +14,9 @@ export * from './validation';
 
 // Utility functions
 export * from './utils';
+
+// AI Verification Engine (V10)
+export * from './ai-verification';
+
+// Shared Components
+export * from './components';

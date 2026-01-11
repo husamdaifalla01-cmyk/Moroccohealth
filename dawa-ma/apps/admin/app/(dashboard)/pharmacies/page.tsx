@@ -1,9 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 
 const mockPharmacies = [
   {
@@ -96,140 +93,139 @@ export default function PharmaciesPage() {
   return (
     <div className="space-y-6">
       {/* Stats */}
-      <div className="grid grid-cols-4 gap-4">
+      <div className="metrics-grid">
         {pharmacyStats.map((stat) => (
-          <Card key={stat.label}>
-            <CardContent className="p-4">
-              <p className="text-2xl font-bold">{stat.value}</p>
-              <p className="text-sm text-gray-500">{stat.label}</p>
-              <p className="text-sm text-green-600">{stat.change}</p>
-            </CardContent>
-          </Card>
+          <div key={stat.label} className="stat-card">
+            <p className="stat-value">{stat.value}</p>
+            <p className="stat-label">{stat.label}</p>
+            <span className="badge badge-verify mt-2">{stat.change}</span>
+          </div>
         ))}
       </div>
 
       {/* Filters */}
-      <Card>
-        <CardContent className="p-4">
-          <div className="flex items-center gap-4">
-            <Input
-              placeholder="Rechercher par nom, licence ou propriétaire..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="max-w-sm"
-            />
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
-            >
-              <option value="all">Tous les statuts</option>
-              <option value="verified">Vérifié</option>
-              <option value="pending">En attente</option>
-              <option value="suspended">Suspendu</option>
-            </select>
-            <Button variant="outline">Exporter CSV</Button>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="chart-container">
+        <div className="flex items-center gap-4">
+          <input
+            type="text"
+            placeholder="Rechercher par nom, licence ou propriétaire..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="input max-w-sm"
+          />
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="input w-48"
+          >
+            <option value="all">Tous les statuts</option>
+            <option value="verified">Vérifié</option>
+            <option value="pending">En attente</option>
+            <option value="suspended">Suspendu</option>
+          </select>
+          <button className="btn-secondary">Exporter CSV</button>
+        </div>
+      </div>
 
       {/* Pharmacies Table */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Liste des pharmacies</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b">
-                  <th className="text-left py-3 px-4 font-medium text-gray-500">Pharmacie</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-500">Propriétaire</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-500">Licence</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-500">Localisation</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-500">Commandes</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-500">Note</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-500">Statut</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-500">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredPharmacies.map((pharmacy) => (
-                  <tr key={pharmacy.id} className="border-b hover:bg-gray-50">
-                    <td className="py-3 px-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                          <span className="text-green-600 font-semibold">{pharmacy.name.charAt(0)}</span>
-                        </div>
-                        <div>
-                          <p className="font-medium">{pharmacy.name}</p>
-                          <div className="flex items-center gap-2">
-                            <span
-                              className={`w-2 h-2 rounded-full ${pharmacy.isOpen ? 'bg-green-500' : 'bg-gray-400'}`}
-                            />
-                            <span className="text-xs text-gray-500">
-                              {pharmacy.isOpen ? 'Ouverte' : 'Fermée'}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="py-3 px-4">{pharmacy.owner}</td>
-                    <td className="py-3 px-4 font-mono text-sm">{pharmacy.license}</td>
-                    <td className="py-3 px-4">
-                      <div className="text-sm">{pharmacy.city}</div>
-                      <div className="text-xs text-gray-500">{pharmacy.address}</div>
-                    </td>
-                    <td className="py-3 px-4">{pharmacy.orders}</td>
-                    <td className="py-3 px-4">
-                      {pharmacy.rating > 0 ? (
-                        <div className="flex items-center gap-1">
-                          <span className="text-yellow-500">★</span>
-                          <span>{pharmacy.rating}</span>
-                        </div>
-                      ) : (
-                        <span className="text-gray-400">N/A</span>
-                      )}
-                    </td>
-                    <td className="py-3 px-4">
-                      <span
-                        className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          pharmacy.status === 'verified'
-                            ? 'bg-green-100 text-green-700'
-                            : pharmacy.status === 'suspended'
-                            ? 'bg-red-100 text-red-700'
-                            : 'bg-yellow-100 text-yellow-700'
-                        }`}
+      <div className="chart-container !p-0">
+        <div className="p-4 border-b" style={{ borderColor: 'var(--border-primary)' }}>
+          <h3 className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>
+            Liste des pharmacies
+          </h3>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>Pharmacie</th>
+                <th>Propriétaire</th>
+                <th>Licence</th>
+                <th>Localisation</th>
+                <th>Commandes</th>
+                <th>Note</th>
+                <th>Statut</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredPharmacies.map((pharmacy) => (
+                <tr key={pharmacy.id}>
+                  <td>
+                    <div className="flex items-center gap-3">
+                      <div
+                        className="w-10 h-10 rounded-lg flex items-center justify-center"
+                        style={{ background: 'var(--bg-surface)' }}
                       >
-                        {pharmacy.status === 'verified'
-                          ? 'Vérifié'
-                          : pharmacy.status === 'suspended'
-                          ? 'Suspendu'
-                          : 'En attente'}
-                      </span>
-                    </td>
-                    <td className="py-3 px-4">
-                      <div className="flex items-center gap-2">
-                        <Button variant="ghost" size="sm">Voir</Button>
-                        {pharmacy.status === 'pending' && (
-                          <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white">
-                            Vérifier
-                          </Button>
-                        )}
-                        {pharmacy.status === 'verified' && (
-                          <Button variant="ghost" size="sm" className="text-red-600">
-                            Suspendre
-                          </Button>
-                        )}
+                        <span style={{ color: 'var(--color-verify)' }} className="font-semibold">
+                          {pharmacy.name.charAt(0)}
+                        </span>
                       </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </CardContent>
-      </Card>
+                      <div>
+                        <p className="font-medium" style={{ color: 'var(--text-primary)' }}>{pharmacy.name}</p>
+                        <div className="flex items-center gap-2">
+                          <span
+                            className={`status-indicator ${pharmacy.isOpen ? 'status-online' : 'status-offline'}`}
+                            style={{ width: '8px', height: '8px' }}
+                          />
+                          <span style={{ color: 'var(--text-muted)' }} className="text-xs">
+                            {pharmacy.isOpen ? 'Ouverte' : 'Fermée'}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>{pharmacy.owner}</td>
+                  <td className="font-mono text-sm">{pharmacy.license}</td>
+                  <td>
+                    <div style={{ color: 'var(--text-primary)' }}>{pharmacy.city}</div>
+                    <div style={{ color: 'var(--text-muted)' }} className="text-xs">{pharmacy.address}</div>
+                  </td>
+                  <td>{pharmacy.orders}</td>
+                  <td>
+                    {pharmacy.rating > 0 ? (
+                      <div className="flex items-center gap-1">
+                        <span style={{ color: 'var(--color-warning)' }}>★</span>
+                        <span>{pharmacy.rating}</span>
+                      </div>
+                    ) : (
+                      <span style={{ color: 'var(--text-muted)' }}>N/A</span>
+                    )}
+                  </td>
+                  <td>
+                    <span
+                      className={`badge ${
+                        pharmacy.status === 'verified'
+                          ? 'badge-verify'
+                          : pharmacy.status === 'suspended'
+                          ? 'badge-critical'
+                          : 'badge-warning'
+                      }`}
+                    >
+                      {pharmacy.status === 'verified'
+                        ? 'Vérifié'
+                        : pharmacy.status === 'suspended'
+                        ? 'Suspendu'
+                        : 'En attente'}
+                    </span>
+                  </td>
+                  <td>
+                    <div className="flex items-center gap-2">
+                      <button className="btn-secondary text-sm py-1 px-2">Voir</button>
+                      {pharmacy.status === 'pending' && (
+                        <button className="btn-verify text-sm py-1 px-2">Vérifier</button>
+                      )}
+                      {pharmacy.status === 'verified' && (
+                        <button className="btn-danger text-sm py-1 px-2">Suspendre</button>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 }

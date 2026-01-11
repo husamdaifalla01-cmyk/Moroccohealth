@@ -1,8 +1,5 @@
 'use client';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-
 const revenueData = {
   today: { value: '125,430 DH', orders: 1247, avgBasket: '145 DH' },
   week: { value: '876,200 DH', orders: 8432, avgBasket: '142 DH' },
@@ -46,171 +43,168 @@ export default function ReportsPage() {
     <div className="space-y-6">
       {/* Quick Actions */}
       <div className="flex gap-4">
-        <Button className="bg-indigo-600 hover:bg-indigo-700">
-          Générer rapport personnalisé
-        </Button>
-        <Button variant="outline">Exporter données brutes</Button>
-        <Button variant="outline">Planifier un rapport</Button>
+        <button className="btn-primary">Générer rapport personnalisé</button>
+        <button className="btn-secondary">Exporter données brutes</button>
+        <button className="btn-secondary">Planifier un rapport</button>
       </div>
 
       {/* Revenue Summary */}
-      <div className="grid grid-cols-4 gap-4">
+      <div className="metrics-grid">
         {Object.entries(revenueData).map(([period, data]) => (
-          <Card key={period}>
-            <CardContent className="p-4">
-              <p className="text-sm text-gray-500 capitalize">
-                {period === 'today' ? "Aujourd'hui" : period === 'week' ? 'Cette semaine' : period === 'month' ? 'Ce mois' : 'Cette année'}
-              </p>
-              <p className="text-2xl font-bold text-indigo-600 mt-1">{data.value}</p>
-              <div className="flex justify-between mt-2 text-xs text-gray-500">
-                <span>{data.orders.toLocaleString()} commandes</span>
-                <span>Panier: {data.avgBasket}</span>
-              </div>
-            </CardContent>
-          </Card>
+          <div key={period} className="stat-card">
+            <p className="stat-label capitalize">
+              {period === 'today' ? "Aujourd'hui" : period === 'week' ? 'Cette semaine' : period === 'month' ? 'Ce mois' : 'Cette année'}
+            </p>
+            <p className="stat-value mt-1" style={{ color: 'var(--accent-primary)' }}>{data.value}</p>
+            <div className="flex justify-between mt-2 text-xs" style={{ color: 'var(--text-muted)' }}>
+              <span>{data.orders.toLocaleString()} commandes</span>
+              <span>Panier: {data.avgBasket}</span>
+            </div>
+          </div>
         ))}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Top Pharmacies */}
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle>Top 5 Pharmacies (ce mois)</CardTitle>
-            <Button variant="ghost" size="sm">Voir tout</Button>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {topPharmacies.map((pharmacy) => (
-                <div key={pharmacy.rank} className="flex items-center gap-4">
-                  <span className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
-                    pharmacy.rank === 1 ? 'bg-yellow-100 text-yellow-700' :
-                    pharmacy.rank === 2 ? 'bg-gray-100 text-gray-700' :
-                    pharmacy.rank === 3 ? 'bg-orange-100 text-orange-700' :
-                    'bg-gray-50 text-gray-500'
-                  }`}>
-                    {pharmacy.rank}
-                  </span>
-                  <div className="flex-1">
-                    <p className="font-medium">{pharmacy.name}</p>
-                    <p className="text-xs text-gray-500">{pharmacy.city}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-medium text-indigo-600">{pharmacy.revenue}</p>
-                    <p className="text-xs text-gray-500">{pharmacy.orders} commandes</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Top Couriers */}
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle>Top 5 Livreurs (ce mois)</CardTitle>
-            <Button variant="ghost" size="sm">Voir tout</Button>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {topCouriers.map((courier) => (
-                <div key={courier.rank} className="flex items-center gap-4">
-                  <span className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
-                    courier.rank === 1 ? 'bg-yellow-100 text-yellow-700' :
-                    courier.rank === 2 ? 'bg-gray-100 text-gray-700' :
-                    courier.rank === 3 ? 'bg-orange-100 text-orange-700' :
-                    'bg-gray-50 text-gray-500'
-                  }`}>
-                    {courier.rank}
-                  </span>
-                  <div className="flex-1">
-                    <p className="font-medium">{courier.name}</p>
-                    <p className="text-xs text-gray-500">{courier.zone}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-medium">{courier.deliveries} livraisons</p>
-                    <div className="flex items-center gap-1 text-xs">
-                      <span className="text-yellow-500">★</span>
-                      <span>{courier.rating}</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* City Breakdown */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Répartition par ville (ce mois)</CardTitle>
-        </CardHeader>
-        <CardContent>
+        <div className="chart-container">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="section-header !mb-0">Top 5 Pharmacies (ce mois)</h3>
+            <button className="btn-secondary text-sm py-1 px-2">Voir tout</button>
+          </div>
           <div className="space-y-4">
-            {cityBreakdown.map((city) => (
-              <div key={city.city} className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="font-medium">{city.city}</span>
-                  <div className="flex items-center gap-4 text-sm">
-                    <span className="text-gray-500">{city.orders.toLocaleString()} commandes</span>
-                    <span className="font-medium text-indigo-600">{city.revenue}</span>
-                    <span className="text-gray-500">{city.percentage}%</span>
-                  </div>
+            {topPharmacies.map((pharmacy) => (
+              <div key={pharmacy.rank} className="flex items-center gap-4">
+                <span
+                  className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold"
+                  style={{
+                    background: pharmacy.rank === 1 ? 'rgba(251, 191, 36, 0.2)' :
+                      pharmacy.rank === 2 ? 'var(--bg-surface)' :
+                      pharmacy.rank === 3 ? 'rgba(251, 191, 36, 0.1)' :
+                      'var(--bg-elevated)',
+                    color: pharmacy.rank <= 3 ? 'var(--color-warning)' : 'var(--text-muted)',
+                  }}
+                >
+                  {pharmacy.rank}
+                </span>
+                <div className="flex-1">
+                  <p className="font-medium" style={{ color: 'var(--text-primary)' }}>{pharmacy.name}</p>
+                  <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{pharmacy.city}</p>
                 </div>
-                <div className="w-full bg-gray-100 rounded-full h-2">
-                  <div
-                    className="bg-indigo-600 h-2 rounded-full"
-                    style={{ width: `${city.percentage}%` }}
-                  />
+                <div className="text-right">
+                  <p className="font-medium" style={{ color: 'var(--accent-primary)' }}>{pharmacy.revenue}</p>
+                  <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{pharmacy.orders} commandes</p>
                 </div>
               </div>
             ))}
           </div>
-        </CardContent>
-      </Card>
+        </div>
+
+        {/* Top Couriers */}
+        <div className="chart-container">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="section-header !mb-0">Top 5 Livreurs (ce mois)</h3>
+            <button className="btn-secondary text-sm py-1 px-2">Voir tout</button>
+          </div>
+          <div className="space-y-4">
+            {topCouriers.map((courier) => (
+              <div key={courier.rank} className="flex items-center gap-4">
+                <span
+                  className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold"
+                  style={{
+                    background: courier.rank === 1 ? 'rgba(251, 191, 36, 0.2)' :
+                      courier.rank === 2 ? 'var(--bg-surface)' :
+                      courier.rank === 3 ? 'rgba(251, 191, 36, 0.1)' :
+                      'var(--bg-elevated)',
+                    color: courier.rank <= 3 ? 'var(--color-warning)' : 'var(--text-muted)',
+                  }}
+                >
+                  {courier.rank}
+                </span>
+                <div className="flex-1">
+                  <p className="font-medium" style={{ color: 'var(--text-primary)' }}>{courier.name}</p>
+                  <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{courier.zone}</p>
+                </div>
+                <div className="text-right">
+                  <p className="font-medium" style={{ color: 'var(--text-primary)' }}>{courier.deliveries} livraisons</p>
+                  <div className="flex items-center gap-1 text-xs justify-end">
+                    <span style={{ color: 'var(--color-warning)' }}>★</span>
+                    <span>{courier.rating}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* City Breakdown */}
+      <div className="chart-container">
+        <h3 className="section-header">Répartition par ville (ce mois)</h3>
+        <div className="space-y-4">
+          {cityBreakdown.map((city) => (
+            <div key={city.city} className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="font-medium" style={{ color: 'var(--text-primary)' }}>{city.city}</span>
+                <div className="flex items-center gap-4 text-sm">
+                  <span style={{ color: 'var(--text-muted)' }}>{city.orders.toLocaleString()} commandes</span>
+                  <span className="font-medium" style={{ color: 'var(--accent-primary)' }}>{city.revenue}</span>
+                  <span style={{ color: 'var(--text-muted)' }}>{city.percentage}%</span>
+                </div>
+              </div>
+              <div
+                className="w-full rounded-full h-2"
+                style={{ background: 'var(--bg-surface)' }}
+              >
+                <div
+                  className="h-2 rounded-full"
+                  style={{ width: `${city.percentage}%`, background: 'var(--accent-primary)' }}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
 
       {/* Scheduled Reports */}
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle>Rapports planifiés</CardTitle>
-          <Button variant="outline" size="sm">Ajouter un rapport</Button>
-        </CardHeader>
-        <CardContent>
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b">
-                  <th className="text-left py-3 px-4 font-medium text-gray-500">Nom du rapport</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-500">Fréquence</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-500">Dernière exécution</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-500">Prochaine exécution</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-500">Actions</th>
+      <div className="chart-container !p-0">
+        <div className="p-4 flex items-center justify-between border-b" style={{ borderColor: 'var(--border-primary)' }}>
+          <h3 className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>
+            Rapports planifiés
+          </h3>
+          <button className="btn-secondary text-sm">Ajouter un rapport</button>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>Nom du rapport</th>
+                <th>Fréquence</th>
+                <th>Dernière exécution</th>
+                <th>Prochaine exécution</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {scheduledReports.map((report) => (
+                <tr key={report.name}>
+                  <td className="font-medium" style={{ color: 'var(--text-primary)' }}>{report.name}</td>
+                  <td>
+                    <span className="badge badge-neutral">{report.frequency}</span>
+                  </td>
+                  <td style={{ color: 'var(--text-muted)' }}>{report.lastRun}</td>
+                  <td style={{ color: 'var(--text-muted)' }}>{report.nextRun}</td>
+                  <td>
+                    <div className="flex items-center gap-2">
+                      <button className="btn-secondary text-sm py-1 px-2">Exécuter</button>
+                      <button className="btn-secondary text-sm py-1 px-2">Modifier</button>
+                    </div>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {scheduledReports.map((report) => (
-                  <tr key={report.name} className="border-b hover:bg-gray-50">
-                    <td className="py-3 px-4 font-medium">{report.name}</td>
-                    <td className="py-3 px-4">
-                      <span className="px-2 py-1 bg-gray-100 rounded-full text-xs">
-                        {report.frequency}
-                      </span>
-                    </td>
-                    <td className="py-3 px-4 text-sm text-gray-500">{report.lastRun}</td>
-                    <td className="py-3 px-4 text-sm text-gray-500">{report.nextRun}</td>
-                    <td className="py-3 px-4">
-                      <div className="flex items-center gap-2">
-                        <Button variant="ghost" size="sm">Exécuter</Button>
-                        <Button variant="ghost" size="sm">Modifier</Button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </CardContent>
-      </Card>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 }

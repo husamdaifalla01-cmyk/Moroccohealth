@@ -1,0 +1,387 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================
+   DAWA.ma V10 Design System
+   Patient App - Mobile-First Design
+   ============================================ */
+
+@layer base {
+  :root {
+    /* Background: Light mode for patient app */
+    --bg-primary: #FFFFFF;
+    --bg-secondary: #F8FAFC;
+    --bg-elevated: #FFFFFF;
+    --bg-surface: #F1F5F9;
+
+    /* Text */
+    --text-primary: #0F172A;
+    --text-secondary: #475569;
+    --text-tertiary: #64748B;
+    --text-muted: #94A3B8;
+
+    /* Brand Colors - DAWA.ma */
+    --brand-primary: #0D9488;    /* Teal */
+    --brand-secondary: #14B8A6;
+    --brand-light: #CCFBF1;
+
+    /* Semantic Colors */
+    --color-success: #10B981;
+    --color-warning: #F59E0B;
+    --color-error: #EF4444;
+    --color-info: #3B82F6;
+
+    /* Order Status Colors */
+    --status-pending: #F59E0B;
+    --status-verified: #10B981;
+    --status-preparing: #3B82F6;
+    --status-ready: #8B5CF6;
+    --status-delivering: #EC4899;
+    --status-delivered: #10B981;
+
+    /* Border */
+    --border-primary: #E2E8F0;
+    --border-secondary: #F1F5F9;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+
+    /* Spacing */
+    --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+
+    /* Shadcn compatibility */
+    --background: 0 0% 100%;
+    --foreground: 222 47% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+    --primary: 168 75% 32%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222 47% 11%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 222 47% 11%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 168 75% 32%;
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --bg-primary: #0F172A;
+    --bg-secondary: #1E293B;
+    --bg-elevated: #334155;
+    --bg-surface: #1E293B;
+
+    --text-primary: #F8FAFC;
+    --text-secondary: #CBD5E1;
+    --text-tertiary: #94A3B8;
+    --text-muted: #64748B;
+
+    --border-primary: #334155;
+    --border-secondary: #1E293B;
+
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
+    --card: 222 47% 11%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222 47% 11%;
+    --popover-foreground: 210 40% 98%;
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  body {
+    @apply bg-[var(--bg-primary)] text-[var(--text-primary)];
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    padding-bottom: var(--safe-area-inset-bottom);
+  }
+}
+
+@layer components {
+  /* Bottom Navigation */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    height: calc(64px + var(--safe-area-inset-bottom));
+    padding-bottom: var(--safe-area-inset-bottom);
+    background: var(--bg-elevated);
+    border-top: 1px solid var(--border-primary);
+    box-shadow: 0 -4px 6px -1px rgb(0 0 0 / 0.05);
+  }
+
+  .bottom-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    padding: 0.5rem 1rem;
+    color: var(--text-muted);
+    transition: color 0.15s ease;
+  }
+
+  .bottom-nav-item.active {
+    color: var(--brand-primary);
+  }
+
+  .bottom-nav-item span {
+    font-size: 0.625rem;
+    font-weight: 500;
+  }
+
+  /* Card Component */
+  .card {
+    background: var(--bg-elevated);
+    border-radius: var(--radius);
+    border: 1px solid var(--border-primary);
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* Primary Button */
+  .btn-primary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
+    background: var(--brand-primary);
+    border-radius: var(--radius);
+    transition: all 0.15s ease;
+  }
+
+  .btn-primary:hover {
+    background: var(--brand-secondary);
+  }
+
+  .btn-primary:active {
+    transform: scale(0.98);
+  }
+
+  /* Secondary Button */
+  .btn-secondary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--brand-primary);
+    background: var(--brand-light);
+    border-radius: var(--radius);
+    transition: all 0.15s ease;
+  }
+
+  .btn-secondary:active {
+    transform: scale(0.98);
+  }
+
+  /* Upload Zone */
+  .upload-zone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    border: 2px dashed var(--border-primary);
+    border-radius: var(--radius);
+    background: var(--bg-surface);
+    transition: all 0.15s ease;
+  }
+
+  .upload-zone:active {
+    border-color: var(--brand-primary);
+    background: var(--brand-light);
+  }
+
+  /* Order Card */
+  .order-card {
+    background: var(--bg-elevated);
+    border-radius: var(--radius);
+    border: 1px solid var(--border-primary);
+    padding: 1rem;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.15s ease;
+  }
+
+  .order-card:active {
+    box-shadow: var(--shadow-md);
+  }
+
+  /* Status Badge */
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 9999px;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+  }
+
+  .status-pending {
+    background: rgba(245, 158, 11, 0.1);
+    color: var(--status-pending);
+  }
+
+  .status-verified {
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--status-verified);
+  }
+
+  .status-preparing {
+    background: rgba(59, 130, 246, 0.1);
+    color: var(--status-preparing);
+  }
+
+  .status-delivering {
+    background: rgba(236, 72, 153, 0.1);
+    color: var(--status-delivering);
+  }
+
+  .status-delivered {
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--status-delivered);
+  }
+
+  /* Progress Steps */
+  .progress-steps {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 0;
+  }
+
+  .progress-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    flex: 1;
+  }
+
+  .progress-step-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-surface);
+    color: var(--text-muted);
+    border: 2px solid var(--border-primary);
+    transition: all 0.2s ease;
+  }
+
+  .progress-step.completed .progress-step-icon {
+    background: var(--brand-primary);
+    color: white;
+    border-color: var(--brand-primary);
+  }
+
+  .progress-step.active .progress-step-icon {
+    background: var(--brand-light);
+    color: var(--brand-primary);
+    border-color: var(--brand-primary);
+  }
+
+  .progress-step-label {
+    font-size: 0.6875rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-align: center;
+  }
+
+  .progress-step.completed .progress-step-label,
+  .progress-step.active .progress-step-label {
+    color: var(--brand-primary);
+  }
+
+  /* Safe Area Padding */
+  .safe-area-bottom {
+    padding-bottom: calc(80px + var(--safe-area-inset-bottom));
+  }
+
+  /* Input */
+  .input {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    font-size: 1rem;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius);
+    color: var(--text-primary);
+    transition: border-color 0.15s ease;
+  }
+
+  .input:focus {
+    outline: none;
+    border-color: var(--brand-primary);
+    box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
+  }
+
+  /* Header */
+  .app-header {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+    padding: 0 1rem;
+    background: var(--bg-elevated);
+    border-bottom: 1px solid var(--border-primary);
+  }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-primary);
+  border-radius: 4px;
+}

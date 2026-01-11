@@ -1,9 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 
 const mockOrders = [
   {
@@ -81,14 +78,14 @@ const orderStats = [
   { label: 'Annulées', value: '9', change: '-12%' },
 ];
 
-const statusLabels: Record<string, { label: string; color: string }> = {
-  pending_verification: { label: 'Vérification', color: 'bg-yellow-100 text-yellow-700' },
-  confirmed: { label: 'Confirmée', color: 'bg-blue-100 text-blue-700' },
-  preparing: { label: 'En préparation', color: 'bg-indigo-100 text-indigo-700' },
-  ready: { label: 'Prête', color: 'bg-purple-100 text-purple-700' },
-  delivering: { label: 'En livraison', color: 'bg-orange-100 text-orange-700' },
-  delivered: { label: 'Livrée', color: 'bg-green-100 text-green-700' },
-  cancelled: { label: 'Annulée', color: 'bg-red-100 text-red-700' },
+const statusLabels: Record<string, { label: string; badgeClass: string }> = {
+  pending_verification: { label: 'Vérification', badgeClass: 'badge-warning' },
+  confirmed: { label: 'Confirmée', badgeClass: 'badge-info' },
+  preparing: { label: 'En préparation', badgeClass: 'badge-info' },
+  ready: { label: 'Prête', badgeClass: 'badge-info' },
+  delivering: { label: 'En livraison', badgeClass: 'badge-warning' },
+  delivered: { label: 'Livrée', badgeClass: 'badge-verify' },
+  cancelled: { label: 'Annulée', badgeClass: 'badge-critical' },
 };
 
 export default function OrdersPage() {
@@ -107,121 +104,120 @@ export default function OrdersPage() {
   return (
     <div className="space-y-6">
       {/* Stats */}
-      <div className="grid grid-cols-4 gap-4">
+      <div className="metrics-grid">
         {orderStats.map((stat) => (
-          <Card key={stat.label}>
-            <CardContent className="p-4">
-              <p className="text-2xl font-bold">{stat.value}</p>
-              <p className="text-sm text-gray-500">{stat.label}</p>
-              {stat.change && (
-                <p className={`text-sm ${stat.change.startsWith('-') ? 'text-red-600' : 'text-green-600'}`}>
-                  {stat.change}
-                </p>
-              )}
-            </CardContent>
-          </Card>
+          <div key={stat.label} className="stat-card">
+            <p className="stat-value">{stat.value}</p>
+            <p className="stat-label">{stat.label}</p>
+            {stat.change && (
+              <span className={`badge mt-2 ${stat.change.startsWith('-') ? 'badge-critical' : 'badge-verify'}`}>
+                {stat.change}
+              </span>
+            )}
+          </div>
         ))}
       </div>
 
       {/* Filters */}
-      <Card>
-        <CardContent className="p-4">
-          <div className="flex items-center gap-4">
-            <Input
-              placeholder="Rechercher par ID, patient ou pharmacie..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="max-w-sm"
-            />
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
-            >
-              <option value="all">Tous les statuts</option>
-              <option value="pending_verification">Vérification</option>
-              <option value="confirmed">Confirmée</option>
-              <option value="preparing">En préparation</option>
-              <option value="ready">Prête</option>
-              <option value="delivering">En livraison</option>
-              <option value="delivered">Livrée</option>
-              <option value="cancelled">Annulée</option>
-            </select>
-            <Input type="date" className="w-40" />
-            <Button variant="outline">Exporter CSV</Button>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="chart-container">
+        <div className="flex items-center gap-4">
+          <input
+            type="text"
+            placeholder="Rechercher par ID, patient ou pharmacie..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="input max-w-sm"
+          />
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="input w-48"
+          >
+            <option value="all">Tous les statuts</option>
+            <option value="pending_verification">Vérification</option>
+            <option value="confirmed">Confirmée</option>
+            <option value="preparing">En préparation</option>
+            <option value="ready">Prête</option>
+            <option value="delivering">En livraison</option>
+            <option value="delivered">Livrée</option>
+            <option value="cancelled">Annulée</option>
+          </select>
+          <input type="date" className="input w-40" />
+          <button className="btn-secondary">Exporter CSV</button>
+        </div>
+      </div>
 
       {/* Orders Table */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Liste des commandes</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b">
-                  <th className="text-left py-3 px-4 font-medium text-gray-500">ID</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-500">Patient</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-500">Pharmacie</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-500">Livreur</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-500">Montant</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-500">Statut</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-500">Date</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-500">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredOrders.map((order) => (
-                  <tr key={order.id} className="border-b hover:bg-gray-50">
-                    <td className="py-3 px-4">
-                      <div className="flex items-center gap-2">
-                        <span className="font-mono text-sm font-medium">{order.id}</span>
-                        {order.hasPrescription && (
-                          <span className="text-xs bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded">Rx</span>
-                        )}
-                      </div>
-                    </td>
-                    <td className="py-3 px-4">
-                      <div>
-                        <p className="font-medium">{order.patient}</p>
-                        <p className="text-xs text-gray-500">{order.city}</p>
-                      </div>
-                    </td>
-                    <td className="py-3 px-4 text-sm">{order.pharmacy}</td>
-                    <td className="py-3 px-4 text-sm">
-                      {order.courier || <span className="text-gray-400">Non assigné</span>}
-                    </td>
-                    <td className="py-3 px-4 font-medium">{order.total}</td>
-                    <td className="py-3 px-4">
-                      <span
-                        className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          statusLabels[order.status]?.color || 'bg-gray-100 text-gray-700'
-                        }`}
-                      >
-                        {statusLabels[order.status]?.label || order.status}
+      <div className="chart-container !p-0">
+        <div className="p-4 border-b" style={{ borderColor: 'var(--border-primary)' }}>
+          <h3 className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>
+            Liste des commandes
+          </h3>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Patient</th>
+                <th>Pharmacie</th>
+                <th>Livreur</th>
+                <th>Montant</th>
+                <th>Statut</th>
+                <th>Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredOrders.map((order) => (
+                <tr key={order.id}>
+                  <td>
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
+                        {order.id}
                       </span>
-                    </td>
-                    <td className="py-3 px-4 text-sm text-gray-500">{order.createdAt}</td>
-                    <td className="py-3 px-4">
-                      <div className="flex items-center gap-2">
-                        <Button variant="ghost" size="sm">Détails</Button>
-                        {order.status !== 'delivered' && order.status !== 'cancelled' && (
-                          <Button variant="ghost" size="sm" className="text-red-600">
-                            Annuler
-                          </Button>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </CardContent>
-      </Card>
+                      {order.hasPrescription && (
+                        <span className="badge badge-info text-[10px] px-1.5">Rx</span>
+                      )}
+                    </div>
+                  </td>
+                  <td>
+                    <div>
+                      <p className="font-medium" style={{ color: 'var(--text-primary)' }}>{order.patient}</p>
+                      <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{order.city}</p>
+                    </div>
+                  </td>
+                  <td>{order.pharmacy}</td>
+                  <td>
+                    {order.courier || (
+                      <span style={{ color: 'var(--text-muted)' }}>Non assigné</span>
+                    )}
+                  </td>
+                  <td className="font-medium" style={{ color: 'var(--text-primary)' }}>{order.total}</td>
+                  <td>
+                    <span
+                      className={`badge ${
+                        statusLabels[order.status]?.badgeClass || 'badge-neutral'
+                      }`}
+                    >
+                      {statusLabels[order.status]?.label || order.status}
+                    </span>
+                  </td>
+                  <td style={{ color: 'var(--text-muted)' }}>{order.createdAt}</td>
+                  <td>
+                    <div className="flex items-center gap-2">
+                      <button className="btn-secondary text-sm py-1 px-2">Détails</button>
+                      {order.status !== 'delivered' && order.status !== 'cancelled' && (
+                        <button className="btn-danger text-sm py-1 px-2">Annuler</button>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 }

@@ -1,9 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 
 const mockCouriers = [
   {
@@ -101,145 +98,147 @@ export default function CouriersPage() {
   return (
     <div className="space-y-6">
       {/* Stats */}
-      <div className="grid grid-cols-4 gap-4">
+      <div className="metrics-grid">
         {courierStats.map((stat) => (
-          <Card key={stat.label}>
-            <CardContent className="p-4">
-              <p className="text-2xl font-bold">{stat.value}</p>
-              <p className="text-sm text-gray-500">{stat.label}</p>
-              {stat.change && <p className="text-sm text-green-600">{stat.change}</p>}
-            </CardContent>
-          </Card>
+          <div key={stat.label} className="stat-card">
+            <p className="stat-value">{stat.value}</p>
+            <p className="stat-label">{stat.label}</p>
+            {stat.change && <span className="badge badge-verify mt-2">{stat.change}</span>}
+          </div>
         ))}
       </div>
 
       {/* Filters */}
-      <Card>
-        <CardContent className="p-4">
-          <div className="flex items-center gap-4">
-            <Input
-              placeholder="Rechercher par nom, téléphone ou CIN..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="max-w-sm"
-            />
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
-            >
-              <option value="all">Tous les statuts</option>
-              <option value="verified">Vérifié</option>
-              <option value="pending">En attente</option>
-              <option value="suspended">Suspendu</option>
-            </select>
-            <Button variant="outline">Exporter CSV</Button>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="chart-container">
+        <div className="flex items-center gap-4">
+          <input
+            type="text"
+            placeholder="Rechercher par nom, téléphone ou CIN..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="input max-w-sm"
+          />
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="input w-48"
+          >
+            <option value="all">Tous les statuts</option>
+            <option value="verified">Vérifié</option>
+            <option value="pending">En attente</option>
+            <option value="suspended">Suspendu</option>
+          </select>
+          <button className="btn-secondary">Exporter CSV</button>
+        </div>
+      </div>
 
       {/* Couriers Table */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Liste des livreurs</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b">
-                  <th className="text-left py-3 px-4 font-medium text-gray-500">Livreur</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-500">Contact</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-500">Véhicule</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-500">Zone</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-500">Livraisons</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-500">Note</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-500">Statut</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-500">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredCouriers.map((courier) => (
-                  <tr key={courier.id} className="border-b hover:bg-gray-50">
-                    <td className="py-3 px-4">
-                      <div className="flex items-center gap-3">
-                        <div className="relative">
-                          <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
-                            <span className="text-purple-600 font-semibold">{courier.name.charAt(0)}</span>
-                          </div>
-                          {courier.isOnline && (
-                            <span className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-green-500 border-2 border-white rounded-full" />
-                          )}
-                        </div>
-                        <div>
-                          <p className="font-medium">{courier.name}</p>
-                          <p className="text-xs text-gray-500">CIN: {courier.cin}</p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="py-3 px-4 text-sm">{courier.phone}</td>
-                    <td className="py-3 px-4">
-                      <div className="flex items-center gap-2">
-                        <span>{courier.vehicleType === 'motorcycle' ? '🏍️' : '🚗'}</span>
-                        <span className="text-sm">{courier.licensePlate}</span>
-                      </div>
-                    </td>
-                    <td className="py-3 px-4 text-sm">{courier.zone}</td>
-                    <td className="py-3 px-4">{courier.deliveries}</td>
-                    <td className="py-3 px-4">
-                      {courier.rating > 0 ? (
-                        <div className="flex items-center gap-1">
-                          <span className="text-yellow-500">★</span>
-                          <span className={courier.rating < 4 ? 'text-red-600' : ''}>{courier.rating}</span>
-                        </div>
-                      ) : (
-                        <span className="text-gray-400">N/A</span>
-                      )}
-                    </td>
-                    <td className="py-3 px-4">
-                      <div className="space-y-1">
-                        <span
-                          className={`px-2 py-1 rounded-full text-xs font-medium ${
-                            courier.status === 'verified'
-                              ? 'bg-green-100 text-green-700'
-                              : courier.status === 'suspended'
-                              ? 'bg-red-100 text-red-700'
-                              : 'bg-yellow-100 text-yellow-700'
-                          }`}
+      <div className="chart-container !p-0">
+        <div className="p-4 border-b" style={{ borderColor: 'var(--border-primary)' }}>
+          <h3 className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>
+            Liste des livreurs
+          </h3>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>Livreur</th>
+                <th>Contact</th>
+                <th>Véhicule</th>
+                <th>Zone</th>
+                <th>Livraisons</th>
+                <th>Note</th>
+                <th>Statut</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredCouriers.map((courier) => (
+                <tr key={courier.id}>
+                  <td>
+                    <div className="flex items-center gap-3">
+                      <div className="relative">
+                        <div
+                          className="w-10 h-10 rounded-full flex items-center justify-center"
+                          style={{ background: 'var(--bg-surface)' }}
                         >
-                          {courier.status === 'verified'
-                            ? 'Vérifié'
-                            : courier.status === 'suspended'
-                            ? 'Suspendu'
-                            : 'En attente'}
+                          <span style={{ color: 'var(--accent-secondary)' }} className="font-semibold">
+                            {courier.name.charAt(0)}
+                          </span>
+                        </div>
+                        {courier.isOnline && (
+                          <span className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full status-online border-2" style={{ borderColor: 'var(--bg-secondary)' }} />
+                        )}
+                      </div>
+                      <div>
+                        <p className="font-medium" style={{ color: 'var(--text-primary)' }}>{courier.name}</p>
+                        <p className="text-xs" style={{ color: 'var(--text-muted)' }}>CIN: {courier.cin}</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td>{courier.phone}</td>
+                  <td>
+                    <div className="flex items-center gap-2">
+                      <span>{courier.vehicleType === 'motorcycle' ? '🏍️' : '🚗'}</span>
+                      <span className="text-sm">{courier.licensePlate}</span>
+                    </div>
+                  </td>
+                  <td>{courier.zone}</td>
+                  <td>{courier.deliveries}</td>
+                  <td>
+                    {courier.rating > 0 ? (
+                      <div className="flex items-center gap-1">
+                        <span style={{ color: 'var(--color-warning)' }}>★</span>
+                        <span style={{ color: courier.rating < 4 ? 'var(--priority-critical)' : 'var(--text-primary)' }}>
+                          {courier.rating}
                         </span>
-                        {courier.currentOrder && (
-                          <p className="text-xs text-indigo-600">En course: {courier.currentOrder}</p>
-                        )}
                       </div>
-                    </td>
-                    <td className="py-3 px-4">
-                      <div className="flex items-center gap-2">
-                        <Button variant="ghost" size="sm">Voir</Button>
-                        {courier.status === 'pending' && (
-                          <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white">
-                            Vérifier
-                          </Button>
-                        )}
-                        {courier.status === 'verified' && (
-                          <Button variant="ghost" size="sm" className="text-red-600">
-                            Suspendre
-                          </Button>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </CardContent>
-      </Card>
+                    ) : (
+                      <span style={{ color: 'var(--text-muted)' }}>N/A</span>
+                    )}
+                  </td>
+                  <td>
+                    <div className="space-y-1">
+                      <span
+                        className={`badge ${
+                          courier.status === 'verified'
+                            ? 'badge-verify'
+                            : courier.status === 'suspended'
+                            ? 'badge-critical'
+                            : 'badge-warning'
+                        }`}
+                      >
+                        {courier.status === 'verified'
+                          ? 'Vérifié'
+                          : courier.status === 'suspended'
+                          ? 'Suspendu'
+                          : 'En attente'}
+                      </span>
+                      {courier.currentOrder && (
+                        <p className="text-xs" style={{ color: 'var(--accent-primary)' }}>
+                          En course: {courier.currentOrder}
+                        </p>
+                      )}
+                    </div>
+                  </td>
+                  <td>
+                    <div className="flex items-center gap-2">
+                      <button className="btn-secondary text-sm py-1 px-2">Voir</button>
+                      {courier.status === 'pending' && (
+                        <button className="btn-verify text-sm py-1 px-2">Vérifier</button>
+                      )}
+                      {courier.status === 'verified' && (
+                        <button className="btn-danger text-sm py-1 px-2">Suspendre</button>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 }

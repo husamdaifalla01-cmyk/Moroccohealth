@@ -1,9 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 
 interface AuditLog {
   id: string;
@@ -138,162 +135,181 @@ export default function AuditLogsPage() {
   return (
     <div className="space-y-6">
       {/* CNDP Compliance Banner */}
-      <Card className="bg-blue-50 border-blue-200">
-        <CardContent className="p-4">
-          <div className="flex items-center gap-4">
-            <span className="text-2xl">🔒</span>
-            <div>
-              <p className="font-medium text-blue-900">Conformité CNDP (Loi 09-08)</p>
-              <p className="text-sm text-blue-700">
-                Les logs d'audit sont conservés pendant 7 ans conformément à la réglementation marocaine.
-                Dernière sauvegarde: 2026-01-11 00:00 UTC
-              </p>
-            </div>
-            <Button variant="outline" className="ml-auto border-blue-300 text-blue-700">
-              Exporter rapport CNDP
-            </Button>
+      <div
+        className="chart-container"
+        style={{ borderColor: 'var(--color-info)', borderWidth: '1px' }}
+      >
+        <div className="flex items-center gap-4">
+          <span className="text-2xl">🔒</span>
+          <div className="flex-1">
+            <p className="font-medium" style={{ color: 'var(--color-info)' }}>
+              Conformité CNDP (Loi 09-08)
+            </p>
+            <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+              Les logs d'audit sont conservés pendant 7 ans conformément à la réglementation marocaine.
+              Dernière sauvegarde: 2026-01-11 00:00 UTC
+            </p>
           </div>
-        </CardContent>
-      </Card>
+          <button className="btn-secondary">Exporter rapport CNDP</button>
+        </div>
+      </div>
 
       {/* Filters */}
-      <Card>
-        <CardContent className="p-4">
-          <div className="flex flex-wrap items-center gap-4">
-            <Input
-              placeholder="Rechercher dans les logs..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="max-w-sm"
+      <div className="chart-container">
+        <div className="flex flex-wrap items-center gap-4">
+          <input
+            type="text"
+            placeholder="Rechercher dans les logs..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="input max-w-sm"
+          />
+          <select
+            value={severityFilter}
+            onChange={(e) => setSeverityFilter(e.target.value)}
+            className="input w-48"
+          >
+            <option value="all">Toutes sévérités</option>
+            <option value="info">Info</option>
+            <option value="warning">Avertissement</option>
+            <option value="critical">Critique</option>
+          </select>
+          <div className="flex items-center gap-2">
+            <input
+              type="date"
+              value={dateRange.start}
+              onChange={(e) => setDateRange({ ...dateRange, start: e.target.value })}
+              className="input w-40"
             />
-            <select
-              value={severityFilter}
-              onChange={(e) => setSeverityFilter(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
-            >
-              <option value="all">Toutes sévérités</option>
-              <option value="info">Info</option>
-              <option value="warning">Avertissement</option>
-              <option value="critical">Critique</option>
-            </select>
-            <div className="flex items-center gap-2">
-              <Input
-                type="date"
-                value={dateRange.start}
-                onChange={(e) => setDateRange({ ...dateRange, start: e.target.value })}
-                className="w-40"
-              />
-              <span className="text-gray-500">à</span>
-              <Input
-                type="date"
-                value={dateRange.end}
-                onChange={(e) => setDateRange({ ...dateRange, end: e.target.value })}
-                className="w-40"
-              />
-            </div>
-            <Button variant="outline">Exporter CSV</Button>
+            <span style={{ color: 'var(--text-muted)' }}>à</span>
+            <input
+              type="date"
+              value={dateRange.end}
+              onChange={(e) => setDateRange({ ...dateRange, end: e.target.value })}
+              className="input w-40"
+            />
           </div>
-        </CardContent>
-      </Card>
+          <button className="btn-secondary">Exporter CSV</button>
+        </div>
+      </div>
 
       {/* Audit Logs Table */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Journal d'audit</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b">
-                  <th className="text-left py-3 px-4 font-medium text-gray-500">Horodatage</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-500">Acteur</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-500">Action</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-500">Ressource</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-500">Détails</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-500">IP</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredLogs.map((log) => (
-                  <tr
-                    key={log.id}
-                    className={`border-b hover:bg-gray-50 ${
-                      log.severity === 'critical' ? 'bg-red-50' : log.severity === 'warning' ? 'bg-yellow-50' : ''
-                    }`}
-                  >
-                    <td className="py-3 px-4">
-                      <div className="flex items-center gap-2">
-                        <span
-                          className={`w-2 h-2 rounded-full ${
+      <div className="chart-container !p-0">
+        <div className="p-4 border-b" style={{ borderColor: 'var(--border-primary)' }}>
+          <h3 className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>
+            Journal d'audit
+          </h3>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>Horodatage</th>
+                <th>Acteur</th>
+                <th>Action</th>
+                <th>Ressource</th>
+                <th>Détails</th>
+                <th>IP</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredLogs.map((log) => (
+                <tr
+                  key={log.id}
+                  style={{
+                    background:
+                      log.severity === 'critical'
+                        ? 'rgba(239, 68, 68, 0.1)'
+                        : log.severity === 'warning'
+                        ? 'rgba(251, 191, 36, 0.1)'
+                        : 'transparent',
+                  }}
+                >
+                  <td>
+                    <div className="flex items-center gap-2">
+                      <span
+                        className="w-2 h-2 rounded-full"
+                        style={{
+                          background:
                             log.severity === 'critical'
-                              ? 'bg-red-500'
+                              ? 'var(--priority-critical)'
                               : log.severity === 'warning'
-                              ? 'bg-yellow-500'
-                              : 'bg-green-500'
-                          }`}
-                        />
-                        <span className="font-mono text-sm">{log.timestamp}</span>
-                      </div>
-                    </td>
-                    <td className="py-3 px-4">
-                      <div className="flex items-center gap-2">
-                        <span
-                          className={`text-xs px-2 py-0.5 rounded ${
-                            log.actor.type === 'admin'
-                              ? 'bg-indigo-100 text-indigo-700'
-                              : log.actor.type === 'system'
-                              ? 'bg-gray-100 text-gray-700'
-                              : log.actor.type === 'pharmacy'
-                              ? 'bg-green-100 text-green-700'
-                              : log.actor.type === 'courier'
-                              ? 'bg-purple-100 text-purple-700'
-                              : 'bg-blue-100 text-blue-700'
-                          }`}
-                        >
-                          {log.actor.type}
-                        </span>
-                        <span className="text-sm">{log.actor.name}</span>
-                      </div>
-                    </td>
-                    <td className="py-3 px-4">
-                      <span className="font-medium text-sm">
-                        {actionLabels[log.action] || log.action}
+                              ? 'var(--color-warning)'
+                              : 'var(--color-verify)',
+                        }}
+                      />
+                      <span className="font-mono text-sm">{log.timestamp}</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div className="flex items-center gap-2">
+                      <span
+                        className={`badge ${
+                          log.actor.type === 'admin'
+                            ? 'badge-info'
+                            : log.actor.type === 'system'
+                            ? 'badge-neutral'
+                            : log.actor.type === 'pharmacy'
+                            ? 'badge-verify'
+                            : log.actor.type === 'courier'
+                            ? 'badge-info'
+                            : 'badge-info'
+                        }`}
+                      >
+                        {log.actor.type}
                       </span>
-                    </td>
-                    <td className="py-3 px-4">
-                      <div>
-                        <span className="font-mono text-xs text-gray-500">{log.resource.type}/</span>
-                        <span className="font-mono text-sm">{log.resource.id}</span>
-                        {log.resource.name && (
-                          <p className="text-xs text-gray-500">{log.resource.name}</p>
-                        )}
-                      </div>
-                    </td>
-                    <td className="py-3 px-4 text-sm text-gray-600 max-w-xs truncate">
-                      {log.details}
-                    </td>
-                    <td className="py-3 px-4 font-mono text-xs text-gray-500">{log.ipAddress}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                      <span className="text-sm">{log.actor.name}</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span className="font-medium text-sm" style={{ color: 'var(--text-primary)' }}>
+                      {actionLabels[log.action] || log.action}
+                    </span>
+                  </td>
+                  <td>
+                    <div>
+                      <span className="font-mono text-xs" style={{ color: 'var(--text-muted)' }}>
+                        {log.resource.type}/
+                      </span>
+                      <span className="font-mono text-sm">{log.resource.id}</span>
+                      {log.resource.name && (
+                        <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                          {log.resource.name}
+                        </p>
+                      )}
+                    </div>
+                  </td>
+                  <td
+                    className="text-sm max-w-xs truncate"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    {log.details}
+                  </td>
+                  <td className="font-mono text-xs" style={{ color: 'var(--text-muted)' }}>
+                    {log.ipAddress}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
-          {/* Pagination */}
-          <div className="flex items-center justify-between mt-4 pt-4 border-t">
-            <p className="text-sm text-gray-500">Affichage de 1-8 sur 1,234 entrées</p>
-            <div className="flex gap-2">
-              <Button variant="outline" size="sm" disabled>
-                Précédent
-              </Button>
-              <Button variant="outline" size="sm">
-                Suivant
-              </Button>
-            </div>
+        {/* Pagination */}
+        <div
+          className="flex items-center justify-between p-4 border-t"
+          style={{ borderColor: 'var(--border-primary)' }}
+        >
+          <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
+            Affichage de 1-8 sur 1,234 entrées
+          </p>
+          <div className="flex gap-2">
+            <button className="btn-secondary text-sm py-1 px-3" disabled>
+              Précédent
+            </button>
+            <button className="btn-secondary text-sm py-1 px-3">Suivant</button>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }

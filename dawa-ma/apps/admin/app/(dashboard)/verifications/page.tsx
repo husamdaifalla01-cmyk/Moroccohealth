@@ -1,8 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 
 type VerificationType = 'pharmacy' | 'courier' | 'prescription';
 
@@ -121,10 +119,10 @@ const mockVerifications: VerificationItem[] = [
 ];
 
 const verificationStats = [
-  { label: 'Total en attente', value: '13', color: 'text-indigo-600' },
-  { label: 'Pharmacies', value: '3', color: 'text-green-600' },
-  { label: 'Livreurs', value: '8', color: 'text-purple-600' },
-  { label: 'Ordonnances urgentes', value: '2', color: 'text-red-600' },
+  { label: 'Total en attente', value: '13', color: 'var(--accent-primary)' },
+  { label: 'Pharmacies', value: '3', color: 'var(--color-verify)' },
+  { label: 'Livreurs', value: '8', color: 'var(--accent-secondary)' },
+  { label: 'Ordonnances urgentes', value: '2', color: 'var(--priority-critical)' },
 ];
 
 export default function VerificationsPage() {
@@ -141,14 +139,12 @@ export default function VerificationsPage() {
   return (
     <div className="space-y-6">
       {/* Stats */}
-      <div className="grid grid-cols-4 gap-4">
+      <div className="metrics-grid">
         {verificationStats.map((stat) => (
-          <Card key={stat.label}>
-            <CardContent className="p-4">
-              <p className={`text-2xl font-bold ${stat.color}`}>{stat.value}</p>
-              <p className="text-sm text-gray-500">{stat.label}</p>
-            </CardContent>
-          </Card>
+          <div key={stat.label} className="stat-card">
+            <p className="stat-value" style={{ color: stat.color }}>{stat.value}</p>
+            <p className="stat-label">{stat.label}</p>
+          </div>
         ))}
       </div>
 
@@ -163,11 +159,15 @@ export default function VerificationsPage() {
           <button
             key={tab.key}
             onClick={() => setSelectedType(tab.key as VerificationType | 'all')}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
               selectedType === tab.key
-                ? 'bg-indigo-600 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                ? 'text-white'
+                : 'hover:opacity-80'
             }`}
+            style={{
+              background: selectedType === tab.key ? 'var(--accent-primary)' : 'var(--bg-elevated)',
+              color: selectedType === tab.key ? 'white' : 'var(--text-secondary)',
+            }}
           >
             {tab.label} ({tab.count})
           </button>
@@ -179,22 +179,26 @@ export default function VerificationsPage() {
         <div className="space-y-4">
           {/* Urgent Items */}
           {urgentItems.length > 0 && (
-            <Card className="border-red-200">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-red-600 flex items-center gap-2">
-                  <span>⚠️</span> Urgent
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
+            <div
+              className="chart-container"
+              style={{ borderColor: 'var(--priority-critical)', borderWidth: '1px' }}
+            >
+              <h3
+                className="section-header flex items-center gap-2"
+                style={{ color: 'var(--priority-critical)' }}
+              >
+                <span>⚠️</span> Urgent
+              </h3>
+              <div className="space-y-3">
                 {urgentItems.map((item) => (
                   <div
                     key={item.id}
                     onClick={() => setSelectedItem(item)}
-                    className={`p-4 rounded-lg border cursor-pointer transition-colors ${
-                      selectedItem?.id === item.id
-                        ? 'border-indigo-500 bg-indigo-50'
-                        : 'border-red-200 bg-red-50 hover:bg-red-100'
-                    }`}
+                    className="p-4 rounded-lg border cursor-pointer transition-all"
+                    style={{
+                      background: selectedItem?.id === item.id ? 'var(--bg-surface)' : 'rgba(239, 68, 68, 0.1)',
+                      borderColor: selectedItem?.id === item.id ? 'var(--accent-primary)' : 'var(--priority-critical)',
+                    }}
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
@@ -204,35 +208,31 @@ export default function VerificationsPage() {
                           {item.type === 'prescription' && '📋'}
                         </span>
                         <div>
-                          <p className="font-medium">{item.name}</p>
-                          <p className="text-xs text-gray-500">{item.submittedAt}</p>
+                          <p className="font-medium" style={{ color: 'var(--text-primary)' }}>{item.name}</p>
+                          <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{item.submittedAt}</p>
                         </div>
                       </div>
-                      <span className="text-xs bg-red-100 text-red-700 px-2 py-1 rounded-full">
-                        Urgent
-                      </span>
+                      <span className="badge badge-critical">Urgent</span>
                     </div>
                   </div>
                 ))}
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           )}
 
           {/* Normal Items */}
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle>En attente de vérification</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
+          <div className="chart-container">
+            <h3 className="section-header">En attente de vérification</h3>
+            <div className="space-y-3">
               {normalItems.map((item) => (
                 <div
                   key={item.id}
                   onClick={() => setSelectedItem(item)}
-                  className={`p-4 rounded-lg border cursor-pointer transition-colors ${
-                    selectedItem?.id === item.id
-                      ? 'border-indigo-500 bg-indigo-50'
-                      : 'border-gray-200 hover:bg-gray-50'
-                  }`}
+                  className="p-4 rounded-lg border cursor-pointer transition-all"
+                  style={{
+                    background: selectedItem?.id === item.id ? 'var(--bg-surface)' : 'var(--bg-elevated)',
+                    borderColor: selectedItem?.id === item.id ? 'var(--accent-primary)' : 'var(--border-primary)',
+                  }}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
@@ -242,17 +242,17 @@ export default function VerificationsPage() {
                         {item.type === 'prescription' && '📋'}
                       </span>
                       <div>
-                        <p className="font-medium">{item.name}</p>
-                        <p className="text-xs text-gray-500">{item.submittedAt}</p>
+                        <p className="font-medium" style={{ color: 'var(--text-primary)' }}>{item.name}</p>
+                        <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{item.submittedAt}</p>
                       </div>
                     </div>
                     <span
-                      className={`text-xs px-2 py-1 rounded-full ${
+                      className={`badge ${
                         item.type === 'pharmacy'
-                          ? 'bg-green-100 text-green-700'
+                          ? 'badge-verify'
                           : item.type === 'courier'
-                          ? 'bg-purple-100 text-purple-700'
-                          : 'bg-blue-100 text-blue-700'
+                          ? 'badge-info'
+                          : 'badge-info'
                       }`}
                     >
                       {item.type === 'pharmacy' ? 'Pharmacie' : item.type === 'courier' ? 'Livreur' : 'Ordonnance'}
@@ -260,81 +260,87 @@ export default function VerificationsPage() {
                   </div>
                 </div>
               ))}
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
 
         {/* Details Panel */}
-        <Card className="h-fit sticky top-24">
-          <CardHeader>
-            <CardTitle>Détails de vérification</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {selectedItem ? (
-              <div className="space-y-6">
-                <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center">
-                    <span className="text-3xl">
-                      {selectedItem.type === 'pharmacy' && '🏥'}
-                      {selectedItem.type === 'courier' && '🚚'}
-                      {selectedItem.type === 'prescription' && '📋'}
-                    </span>
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold">{selectedItem.name}</h3>
-                    <p className="text-sm text-gray-500">Soumis le {selectedItem.submittedAt}</p>
-                  </div>
+        <div className="chart-container h-fit sticky top-24">
+          <h3 className="section-header">Détails de vérification</h3>
+          {selectedItem ? (
+            <div className="space-y-6">
+              <div className="flex items-center gap-4">
+                <div
+                  className="w-16 h-16 rounded-lg flex items-center justify-center"
+                  style={{ background: 'var(--bg-surface)' }}
+                >
+                  <span className="text-3xl">
+                    {selectedItem.type === 'pharmacy' && '🏥'}
+                    {selectedItem.type === 'courier' && '🚚'}
+                    {selectedItem.type === 'prescription' && '📋'}
+                  </span>
                 </div>
-
                 <div>
-                  <h4 className="font-medium mb-2">Informations</h4>
-                  <div className="bg-gray-50 rounded-lg p-4 space-y-2">
-                    {Object.entries(selectedItem.details).map(([key, value]) => (
-                      <div key={key} className="flex justify-between text-sm">
-                        <span className="text-gray-500 capitalize">{key.replace(/([A-Z])/g, ' $1')}</span>
-                        <span className="font-medium">{value}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <h4 className="font-medium mb-2">Documents soumis</h4>
-                  <div className="space-y-2">
-                    {selectedItem.documents.map((doc) => (
-                      <div
-                        key={doc}
-                        className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
-                      >
-                        <div className="flex items-center gap-2">
-                          <span>📄</span>
-                          <span className="text-sm">{doc}</span>
-                        </div>
-                        <Button variant="ghost" size="sm">
-                          Voir
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="flex gap-3 pt-4 border-t">
-                  <Button className="flex-1 bg-green-600 hover:bg-green-700">
-                    Approuver
-                  </Button>
-                  <Button variant="outline" className="flex-1 text-red-600 border-red-300 hover:bg-red-50">
-                    Rejeter
-                  </Button>
+                  <h3 className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>
+                    {selectedItem.name}
+                  </h3>
+                  <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
+                    Soumis le {selectedItem.submittedAt}
+                  </p>
                 </div>
               </div>
-            ) : (
-              <div className="text-center py-12 text-gray-500">
-                <span className="text-4xl block mb-4">👆</span>
-                <p>Sélectionnez un élément pour voir les détails</p>
+
+              <div>
+                <h4 className="font-medium mb-2" style={{ color: 'var(--text-primary)' }}>Informations</h4>
+                <div
+                  className="rounded-lg p-4 space-y-2"
+                  style={{ background: 'var(--bg-elevated)' }}
+                >
+                  {Object.entries(selectedItem.details).map(([key, value]) => (
+                    <div key={key} className="flex justify-between text-sm">
+                      <span className="capitalize" style={{ color: 'var(--text-muted)' }}>
+                        {key.replace(/([A-Z])/g, ' $1')}
+                      </span>
+                      <span className="font-medium" style={{ color: 'var(--text-primary)' }}>{value}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
-            )}
-          </CardContent>
-        </Card>
+
+              <div>
+                <h4 className="font-medium mb-2" style={{ color: 'var(--text-primary)' }}>Documents soumis</h4>
+                <div className="space-y-2">
+                  {selectedItem.documents.map((doc) => (
+                    <div
+                      key={doc}
+                      className="flex items-center justify-between p-3 rounded-lg"
+                      style={{ background: 'var(--bg-elevated)' }}
+                    >
+                      <div className="flex items-center gap-2">
+                        <span>📄</span>
+                        <span className="text-sm" style={{ color: 'var(--text-primary)' }}>{doc}</span>
+                      </div>
+                      <button className="btn-secondary text-sm py-1 px-2">Voir</button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div
+                className="flex gap-3 pt-4 border-t"
+                style={{ borderColor: 'var(--border-primary)' }}
+              >
+                <button className="btn-verify flex-1">Approuver</button>
+                <button className="btn-danger flex-1">Rejeter</button>
+              </div>
+            </div>
+          ) : (
+            <div className="text-center py-12" style={{ color: 'var(--text-muted)' }}>
+              <span className="text-4xl block mb-4">👆</span>
+              <p>Sélectionnez un élément pour voir les détails</p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
