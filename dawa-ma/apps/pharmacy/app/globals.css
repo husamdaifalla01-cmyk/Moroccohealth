@@ -1,0 +1,301 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================
+   DAWA.ma V10 Design System
+   Pharmacy Portal - Command Center Architecture
+   ============================================ */
+
+@layer base {
+  :root {
+    /* Typography Scale - Tighter for density */
+    --text-xs: 0.6875rem;   /* 11px */
+    --text-sm: 0.75rem;     /* 12px */
+    --text-base: 0.875rem;  /* 14px */
+    --text-lg: 1rem;        /* 16px */
+    --text-xl: 1.25rem;     /* 20px */
+    --text-2xl: 1.5rem;     /* 24px */
+
+    /* Line heights - Tighter for density */
+    --leading-tight: 1.15;
+    --leading-normal: 1.35;
+    --leading-relaxed: 1.5;
+
+    /* Letter spacing */
+    --tracking-tight: -0.02em;
+    --tracking-normal: 0;
+    --tracking-wide: 0.05em;
+    --tracking-mono: 0.1em;
+
+    /* Negative Space System */
+    --space-1: 0.25rem;   /* 4px */
+    --space-2: 0.5rem;    /* 8px */
+    --space-3: 0.875rem;  /* 14px */
+    --space-4: 1.25rem;   /* 20px */
+    --space-5: 2rem;      /* 32px */
+    --space-6: 3.5rem;    /* 56px */
+    --space-8: 6rem;      /* 96px */
+
+    /* Background: Deep, not pure black */
+    --bg-primary: #0A0A0F;
+    --bg-secondary: #12121A;
+    --bg-elevated: #1A1A24;
+    --bg-surface: #22222E;
+
+    /* Text: High contrast but not harsh */
+    --text-primary: #F4F4F5;
+    --text-secondary: #A1A1AA;
+    --text-tertiary: #71717A;
+    --text-muted: #52525B;
+
+    /* Semantic Colors */
+    --color-verify: #4ADE80;      /* Green: Approved */
+    --color-warning: #FBBF24;     /* Amber: Attention */
+    --color-danger: #F87171;      /* Red: Rejected */
+    --color-info: #60A5FA;        /* Blue: Info */
+    --color-neutral: #A1A1AA;     /* Gray: Inactive */
+
+    /* Priority Tiers */
+    --priority-critical: #EF4444;
+    --priority-high: #F97316;
+    --priority-normal: #3B82F6;
+    --priority-low: #6B7280;
+
+    /* Accent Colors */
+    --accent-primary: #8B5CF6;    /* Purple: Primary actions */
+    --accent-secondary: #EC4899;  /* Pink: Secondary */
+
+    /* Shadcn compatibility */
+    --background: 240 10% 4%;
+    --foreground: 240 5% 96%;
+    --card: 240 10% 7%;
+    --card-foreground: 240 5% 96%;
+    --popover: 240 10% 7%;
+    --popover-foreground: 240 5% 96%;
+    --primary: 263 70% 50%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 240 5% 14%;
+    --secondary-foreground: 240 5% 96%;
+    --muted: 240 5% 14%;
+    --muted-foreground: 240 5% 65%;
+    --accent: 240 5% 14%;
+    --accent-foreground: 240 5% 96%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 240 5% 18%;
+    --input: 240 5% 18%;
+    --ring: 263 70% 50%;
+    --radius: 0.375rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  body {
+    @apply bg-[var(--bg-primary)] text-[var(--text-primary)];
+    font-family: 'DM Sans', 'SF Pro Display', system-ui, sans-serif;
+    font-size: var(--text-base);
+    line-height: var(--leading-normal);
+    letter-spacing: var(--tracking-tight);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Monospace for data/codes */
+  .font-mono {
+    font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+    letter-spacing: var(--tracking-mono);
+  }
+
+  /* Headlines */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Inter Tight', 'DM Sans', system-ui, sans-serif;
+    font-weight: 600;
+    letter-spacing: var(--tracking-tight);
+    line-height: var(--leading-tight);
+  }
+}
+
+@layer components {
+  /* Priority Queue Item */
+  .queue-item {
+    padding: var(--space-3) var(--space-4) var(--space-3) var(--space-5);
+    border-left: 3px solid var(--priority-normal);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    background: var(--bg-secondary);
+    transition: background 0.15s ease;
+  }
+
+  .queue-item:hover {
+    background: var(--bg-elevated);
+  }
+
+  .queue-item.selected {
+    background: var(--bg-surface);
+    border-left-color: var(--accent-primary);
+  }
+
+  .queue-item.priority-critical {
+    border-left-color: var(--priority-critical);
+  }
+
+  .queue-item.priority-high {
+    border-left-color: var(--priority-high);
+  }
+
+  .queue-item.priority-normal {
+    border-left-color: var(--priority-normal);
+  }
+
+  .queue-item.priority-low {
+    border-left-color: var(--priority-low);
+  }
+
+  /* Status Badges */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.125rem 0.5rem;
+    font-size: var(--text-xs);
+    font-weight: 500;
+    border-radius: 0.25rem;
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+  }
+
+  .badge-verify {
+    background: rgba(74, 222, 128, 0.15);
+    color: var(--color-verify);
+  }
+
+  .badge-warning {
+    background: rgba(251, 191, 36, 0.15);
+    color: var(--color-warning);
+  }
+
+  .badge-danger {
+    background: rgba(248, 113, 113, 0.15);
+    color: var(--color-danger);
+  }
+
+  .badge-info {
+    background: rgba(96, 165, 250, 0.15);
+    color: var(--color-info);
+  }
+
+  .badge-neutral {
+    background: rgba(161, 161, 170, 0.15);
+    color: var(--color-neutral);
+  }
+
+  /* Action Buttons */
+  .btn-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    border-radius: 0.25rem;
+    transition: all 0.15s ease;
+  }
+
+  .btn-verify {
+    background: var(--color-verify);
+    color: var(--bg-primary);
+  }
+
+  .btn-verify:hover {
+    background: #22c55e;
+  }
+
+  .btn-reject {
+    background: transparent;
+    border: 1px solid var(--color-danger);
+    color: var(--color-danger);
+  }
+
+  .btn-reject:hover {
+    background: rgba(248, 113, 113, 0.1);
+  }
+
+  /* Keyboard Shortcuts */
+  .kbd {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.5rem;
+    height: 1.5rem;
+    padding: 0 0.375rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: var(--text-xs);
+    font-weight: 500;
+    color: var(--text-tertiary);
+    background: var(--bg-surface);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 0.25rem;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    background: var(--bg-secondary);
+    border-right: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .sidebar-rtl {
+    border-right: none;
+    border-left: 1px solid rgba(255,255,255,0.06);
+  }
+
+  /* Nav Item */
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.625rem 0.75rem;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--text-secondary);
+    border-radius: 0.375rem;
+    transition: all 0.15s ease;
+  }
+
+  .nav-item:hover {
+    color: var(--text-primary);
+    background: var(--bg-elevated);
+  }
+
+  .nav-item.active {
+    color: var(--accent-primary);
+    background: rgba(139, 92, 246, 0.1);
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--bg-surface);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
+  }
+}
+
+/* Fonts loaded via system fallbacks for faster loading */
