@@ -18,5 +18,11 @@ export * from './utils';
 // AI Verification Engine (V10)
 export * from './ai-verification';
 
+// API Client
+export * from './api';
+
+// React Hooks
+export * from './hooks';
+
 // Shared Components
 export * from './components';

@@ -1,0 +1,250 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==============================================
+   DAWA.ma Courier App - Design System
+   Dark theme optimized for outdoor delivery use
+   ============================================== */
+
+:root {
+  /* Brand Colors - Amber/Orange for courier identity */
+  --brand-primary: #F59E0B;
+  --brand-secondary: #D97706;
+  --brand-light: #FEF3C7;
+  --brand-dark: #B45309;
+
+  /* Status Colors */
+  --status-online: #10B981;
+  --status-offline: #6B7280;
+  --status-busy: #F59E0B;
+  --status-break: #8B5CF6;
+
+  /* Delivery Status */
+  --delivery-new: #3B82F6;
+  --delivery-pickup: #F59E0B;
+  --delivery-transit: #8B5CF6;
+  --delivery-arrived: #10B981;
+
+  /* Background - Dark theme */
+  --bg-primary: #111827;
+  --bg-secondary: #1F2937;
+  --bg-elevated: #374151;
+  --bg-surface: #1F2937;
+
+  /* Text */
+  --text-primary: #F9FAFB;
+  --text-secondary: #D1D5DB;
+  --text-muted: #9CA3AF;
+  --text-inverse: #111827;
+
+  /* Borders */
+  --border-primary: #374151;
+  --border-secondary: #4B5563;
+
+  /* Safe area insets */
+  --safe-area-top: env(safe-area-inset-top);
+  --safe-area-bottom: env(safe-area-inset-bottom);
+  --safe-area-left: env(safe-area-inset-left);
+  --safe-area-right: env(safe-area-inset-right);
+}
+
+/* Base Styles */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+
+/* Safe Areas */
+.safe-area-top {
+  padding-top: max(env(safe-area-inset-top), 16px);
+}
+
+.safe-area-bottom {
+  padding-bottom: max(env(safe-area-inset-bottom), 16px);
+}
+
+/* App Header */
+.app-header {
+  @apply sticky top-0 z-10 flex items-center justify-between px-4 py-3 bg-[var(--bg-secondary)] border-b border-[var(--border-primary)];
+  padding-top: max(env(safe-area-inset-top), 12px);
+}
+
+/* Bottom Navigation */
+.bottom-nav {
+  @apply fixed bottom-0 left-0 right-0 flex items-center justify-around bg-[var(--bg-secondary)] border-t border-[var(--border-primary)] z-50;
+  padding-bottom: max(env(safe-area-inset-bottom), 8px);
+  padding-top: 8px;
+}
+
+.bottom-nav-item {
+  @apply flex flex-col items-center gap-1 px-4 py-2 text-[var(--text-muted)] transition-colors;
+}
+
+.bottom-nav-item.active {
+  @apply text-[var(--brand-primary)];
+}
+
+.bottom-nav-item span {
+  @apply text-xs font-medium;
+}
+
+/* Cards */
+.card {
+  @apply bg-[var(--bg-surface)] rounded-2xl border border-[var(--border-primary)];
+}
+
+/* Delivery Card */
+.delivery-card {
+  @apply card p-4 transition-all active:scale-[0.98];
+}
+
+.delivery-card.urgent {
+  @apply border-amber-500/50 bg-amber-500/10;
+}
+
+/* Status Badge */
+.status-badge {
+  @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium;
+}
+
+.status-online {
+  @apply bg-emerald-500/20 text-emerald-400;
+}
+
+.status-offline {
+  @apply bg-gray-500/20 text-gray-400;
+}
+
+.status-busy {
+  @apply bg-amber-500/20 text-amber-400;
+}
+
+/* Delivery Status */
+.delivery-new {
+  @apply bg-blue-500/20 text-blue-400;
+}
+
+.delivery-pickup {
+  @apply bg-amber-500/20 text-amber-400;
+}
+
+.delivery-transit {
+  @apply bg-purple-500/20 text-purple-400;
+}
+
+.delivery-arrived {
+  @apply bg-emerald-500/20 text-emerald-400;
+}
+
+/* Buttons */
+.btn-primary {
+  @apply w-full py-4 bg-[var(--brand-primary)] text-[var(--text-inverse)] font-semibold rounded-xl transition-all active:scale-[0.98] disabled:opacity-50;
+}
+
+.btn-secondary {
+  @apply w-full py-4 bg-[var(--bg-elevated)] text-[var(--text-primary)] font-medium rounded-xl border border-[var(--border-primary)] transition-all active:scale-[0.98];
+}
+
+.btn-success {
+  @apply w-full py-4 bg-emerald-500 text-white font-semibold rounded-xl transition-all active:scale-[0.98];
+}
+
+.btn-danger {
+  @apply w-full py-4 bg-red-500 text-white font-semibold rounded-xl transition-all active:scale-[0.98];
+}
+
+/* Toggle Switch */
+.toggle-switch {
+  @apply relative w-14 h-8 bg-[var(--bg-elevated)] rounded-full transition-colors cursor-pointer;
+}
+
+.toggle-switch.active {
+  @apply bg-[var(--brand-primary)];
+}
+
+.toggle-switch::after {
+  @apply absolute top-1 left-1 w-6 h-6 bg-white rounded-full transition-transform;
+  content: '';
+}
+
+.toggle-switch.active::after {
+  @apply translate-x-6;
+}
+
+/* Stats Card */
+.stat-card {
+  @apply card p-4 text-center;
+}
+
+.stat-value {
+  @apply text-2xl font-bold text-[var(--text-primary)];
+}
+
+.stat-label {
+  @apply text-sm text-[var(--text-muted)] mt-1;
+}
+
+/* Map Container */
+.map-container {
+  @apply w-full h-64 bg-[var(--bg-elevated)] rounded-xl overflow-hidden;
+}
+
+/* Navigation Button */
+.nav-button {
+  @apply flex items-center gap-3 p-4 bg-blue-500 text-white rounded-xl font-semibold transition-all active:scale-[0.98];
+}
+
+/* Earnings */
+.earnings-display {
+  @apply text-4xl font-bold text-[var(--brand-primary)];
+}
+
+/* Timer */
+.delivery-timer {
+  @apply font-mono text-2xl text-[var(--text-primary)];
+}
+
+/* Pulse Animation */
+@keyframes pulse-ring {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+.pulse-ring {
+  animation: pulse-ring 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Slide Up Animation */
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.slide-up {
+  animation: slide-up 0.3s ease-out;
+}

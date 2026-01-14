@@ -168,7 +168,7 @@ export const PostUploadVerificationSchema = z.object({
 
 export const PriorityTierSchema = z.enum(['CRITICAL', 'HIGH', 'NORMAL', 'LOW']);
 
-export const OrderStatusSchema = z.enum([
+export const AIOrderStatusSchema = z.enum([
   'PENDING_IMAGE',
   'PENDING_AI_ANALYSIS',
   'PENDING_VERIFICATION',
@@ -234,7 +234,7 @@ export const OrderQueueItemSchema = z.object({
   time_in_queue_minutes: z.number().min(0),
   sla_breach_in_minutes: z.number().nullable(),
   patient: PatientContextSchema,
-  status: OrderStatusSchema,
+  status: AIOrderStatusSchema,
   items_count: z.number().int().positive(),
   has_controlled_substance: z.boolean(),
   has_interaction_warning: z.boolean(),

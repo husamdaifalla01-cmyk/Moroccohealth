@@ -1,9 +1,10 @@
 import type { Metadata, Viewport } from 'next';
+import { Providers } from './providers';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'DAWA.ma - Livraison de Médicaments',
-  description: 'Commandez vos médicaments et recevez-les chez vous rapidement et en toute sécurité.',
+  title: 'DAWA.ma - Livraison de Medicaments',
+  description: 'Commandez vos medicaments et recevez-les chez vous rapidement et en toute securite.',
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
@@ -35,7 +36,9 @@ export default function RootLayout({
         <meta name="mobile-web-app-capable" content="yes" />
       </head>
       <body className="antialiased">
-        {children}
+        <Providers>
+          {children}
+        </Providers>
       </body>
     </html>
   );

@@ -205,7 +205,7 @@ export interface OrderQueueItem {
   };
 
   // Order Details
-  status: OrderStatus;
+  status: AIOrderStatus;
   items_count: number;
   has_controlled_substance: boolean;
   has_interaction_warning: boolean;
@@ -225,7 +225,7 @@ export interface OrderQueueItem {
 
 export type PriorityTier = 'CRITICAL' | 'HIGH' | 'NORMAL' | 'LOW';
 
-export type OrderStatus =
+export type AIOrderStatus =
   | 'PENDING_IMAGE'
   | 'PENDING_AI_ANALYSIS'
   | 'PENDING_VERIFICATION'

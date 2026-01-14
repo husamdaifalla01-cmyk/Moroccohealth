@@ -1,0 +1,24 @@
+// ==============================================
+// DAWA.ma Patient App - Supabase Client
+// Browser-side Supabase client configuration
+// ==============================================
+
+import { createBrowserClient } from '@supabase/ssr';
+import type { Database } from '@dawa/supabase';
+
+export function createClient() {
+  return createBrowserClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
+}
+
+// Singleton instance for client-side use
+let client: ReturnType<typeof createClient> | null = null;
+
+export function getSupabaseClient() {
+  if (!client) {
+    client = createClient();
+  }
+  return client;
+}

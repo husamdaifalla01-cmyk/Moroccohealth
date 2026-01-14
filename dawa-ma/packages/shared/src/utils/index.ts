@@ -238,8 +238,12 @@ export const isWithinOperatingHours = (
   if (operatingHours.closed) return false;
 
   const currentTime = now.getHours() * 60 + now.getMinutes();
-  const [openHour, openMin] = operatingHours.open.split(':').map(Number);
-  const [closeHour, closeMin] = operatingHours.close.split(':').map(Number);
+  const openParts = operatingHours.open.split(':').map(Number);
+  const closeParts = operatingHours.close.split(':').map(Number);
+  const openHour = openParts[0] ?? 0;
+  const openMin = openParts[1] ?? 0;
+  const closeHour = closeParts[0] ?? 0;
+  const closeMin = closeParts[1] ?? 0;
 
   const openTime = openHour * 60 + openMin;
   const closeTime = closeHour * 60 + closeMin;
@@ -387,8 +391,10 @@ export const maskPhoneNumber = (phone: string): string => {
  * Masks email for display
  */
 export const maskEmail = (email: string): string => {
-  const [local, domain] = email.split('@');
-  if (!domain || local.length < 3) return email;
+  const parts = email.split('@');
+  const local = parts[0];
+  const domain = parts[1];
+  if (!local || !domain || local.length < 3) return email;
   return local.slice(0, 2) + '***@' + domain;
 };
 

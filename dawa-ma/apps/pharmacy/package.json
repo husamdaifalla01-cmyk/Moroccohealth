@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.32.0",
     "@dawa/shared": "workspace:*",
     "@dawa/supabase": "workspace:*",
     "@hookform/resolvers": "^3.3.4",
